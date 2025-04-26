@@ -180,6 +180,44 @@ const randomMotivation = () => {
   return quotes[Math.floor(Math.random() * quotes.length)];
 };
 
+// Astra Utility: Advanced Calculator
+const advancedCalculator = (expression) => {
+  try {
+    // Replacing verbal commands with mathematical operators
+    expression = expression
+      .replace(/plus/gi, "+")
+      .replace(/minus/gi, "-")
+      .replace(/multiplied by|times/gi, "*")
+      .replace(/divided by/gi, "/")
+      .replace(/into/gi, "*")
+      .replace(/over/gi, "/")
+      .replace(/power of/gi, "**")
+      .replace(/square root of/gi, "Math.sqrt")
+      .replace(/cube root of/gi, "Math.cbrt")
+      .replace(/percent of/gi, "*0.01*");
+
+    // Handle Math.sqrt and Math.cbrt separately
+    if (expression.includes("Math.sqrt") || expression.includes("Math.cbrt")) {
+      // Example: Math.sqrt(25)
+      const number = expression.match(/\d+/);
+      if (expression.includes("Math.sqrt")) {
+        return `The square root is ${Math.sqrt(Number(number))}`;
+      } else if (expression.includes("Math.cbrt")) {
+        return `The cube root is ${Math.cbrt(Number(number))}`;
+      }
+    }
+
+    // Basic evaluation
+    if (/^[\d+\-*/().\s^]+$/.test(expression)) {
+      const result = eval(expression);
+      return `The answer is ${result}`;
+    } else {
+      return "Sorry, I can only perform basic and intermediate calculations.";
+    }
+  } catch (error) {
+    return "There was an error in your calculation. Please try again.";
+  }
+};
 
 
 
@@ -257,6 +295,22 @@ function takeCommand(message) {
          message.includes("i need inspiration")) {
     const motivation = randomMotivation();
     typeMessage(motivation);
+  } else if (message.includes("calculate") ||
+         message.includes("what is") ||
+         message.includes("solve") ||
+         message.includes("square root") ||
+         message.includes("cube root") ||
+         message.includes("power of") ||
+         message.includes("percent")) {
+  const expression = message
+    .replace(/(calculate|what is|solve|square root|cube root|power of|percent)/gi, "")
+    .trim();
+  if (expression) {
+    const calcResult = advancedCalculator(expression);
+    typeMessage(calcResult);
+   } else {
+     typeMessage("Please provide a calculation for me to solve.");
+   }
   } else {
     typeMessage("Sorry, I couldn't understand that. Please try something else.");
   }
