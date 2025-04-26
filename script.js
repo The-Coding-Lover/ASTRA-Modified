@@ -142,11 +142,6 @@ function takeCommand(message) {
     document.body.classList.remove("dark-mode");
     typeMessage("Light mode activated.");
   } else if (
-    // message.includes("calculator") ||
-    // message.includes("plus") ||
-    // message.includes("minus") ||
-    // message.includes("divide") ||
-    // message.includes("multiply")
     message.includes("calculate")
   ) {
     processInput(message);
@@ -154,22 +149,6 @@ function takeCommand(message) {
     typeMessage("Sorry, I couldn't understand that. Please try something else.");
   }
 }
-
-// Simple calculator
-// function calculate(msg) {
-//   try {
-//     const expression = msg
-//       .replace(/plus/g, "+")
-//       .replace(/minus/g, "-")
-//       .replace(/into|multiply|times/g, "*")
-//       .replace(/divide|by/g, "/");
-//     const result = eval(expression);
-//     typeMessage(`The result is ${result}`);
-//   } catch {
-//     typeMessage("Sorry, I couldn't calculate that.");
-//   }
-// }
-
 
 
 // Function to calculate the mathematical expression
@@ -256,8 +235,3 @@ function processInput(input) {
     typeMessage("Invalid command.");
   }
 }
-
-// Example usage
-// processInput("calculate: 2 + 3 * (4 - 1)");  // Will call calculate function
-// processInput("quit");  // Will exit
-// processInput("random command");  // Will print "Invalid command."
