@@ -153,6 +153,34 @@ const helpMe = () => {
   return help[Math.floor(Math.random() * help.length)];
 };
 
+// Astra Utility: Random Motivational Quotes
+const randomMotivation = () => {
+  const quotes = [
+    "Believe in yourself and all that you are.",
+    "Don't watch the clock; do what it does. Keep going.",
+    "Success is not final, failure is not fatal: It is the courage to continue that counts.",
+    "Dream big and dare to fail.",
+    "The harder you work for something, the greater you'll feel when you achieve it.",
+    "Push yourself, because no one else is going to do it for you.",
+    "Great things never come from comfort zones.",
+    "Dream it. Wish it. Do it.",
+    "Success doesn't just find you. You have to go out and get it.",
+    "The key to success is to focus on goals, not obstacles.",
+    "Don't stop when you're tired. Stop when you're done.",
+    "Stay positive, work hard, make it happen.",
+    "Doubt kills more dreams than failure ever will.",
+    "Little things make big days.",
+    "Your only limit is your mind.",
+    "The way to get started is to quit talking and begin doing.",
+    "Don't limit your challenges. Challenge your limits.",
+    "Work hard in silence, let your success make the noise.",
+    "Sometimes we're tested not to show our weaknesses, but to discover our strengths.",
+    "It always seems impossible until it's done."
+  ];
+  return quotes[Math.floor(Math.random() * quotes.length)];
+};
+
+
 
 
 // Command logic
@@ -223,6 +251,12 @@ function takeCommand(message) {
   } else if (message.includes("light mode")) {
     document.body.classList.remove("dark-mode");
     typeMessage("Light mode activated.");
+  } else if (message.includes("motivate me") ||
+         message.includes("inspire me") ||
+         message.includes("give me motivation") ||
+         message.includes("i need inspiration")) {
+    const motivation = randomMotivation();
+    typeMessage(motivation);
   } else {
     typeMessage("Sorry, I couldn't understand that. Please try something else.");
   }
