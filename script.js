@@ -184,43 +184,354 @@ const randomMotivation = () => {
 const advancedCalculator = (expression) => {
   try {
     // Replacing verbal commands with mathematical operators
-    expression = expression
-      .replace(/plus/gi, "+")
-      .replace(/minus/gi, "-")
-      .replace(/multiplied by|times/gi, "*")
-      .replace(/divided by/gi, "/")
-      .replace(/into/gi, "*")
-      .replace(/over/gi, "/")
-      .replace(/power of/gi, "**")
-      .replace(/square root of/gi, "Math.sqrt")
-      .replace(/cube root of/gi, "Math.cbrt")
-      .replace(/percent of/gi, "*0.01*");
+    // const advancedCalculator = (expression) => {
+//   try {
+//     // Replacing verbal commands with mathematical operators
+//     expression = expression
+//       .replace(/plus/gi, "+")
+//       .replace(/minus/gi, "-")
+//       .replace(/multiplied by|times/gi, "*")
+//       .replace(/divided by/gi, "/")
+//       .replace(/into/gi, "*")
+//       .replace(/over/gi, "/")
+//       .replace(/power of/gi, "**")
+//       .replace(/square root of/gi, "Math.sqrt")
+//       .replace(/cube root of/gi, "Math.cbrt")
+//       .replace(/percent of/gi, "*0.01*");
 
-    // Handle Math.sqrt and Math.cbrt separately
-    if (expression.includes("Math.sqrt") || expression.includes("Math.cbrt")) {
-      // Example: Math.sqrt(25)
-      const number = expression.match(/\d+/);
-      if (expression.includes("Math.sqrt")) {
-        return `The square root is ${Math.sqrt(Number(number))}`;
-      } else if (expression.includes("Math.cbrt")) {
-        return `The cube root is ${Math.cbrt(Number(number))}`;
-      }
+//     // Handle Math.sqrt and Math.cbrt separately
+//     if (expression.includes("Math.sqrt") || expression.includes("Math.cbrt")) {
+//       // Example: Math.sqrt(25)
+//       const number = expression.match(/\d+/);
+//       if (expression.includes("Math.sqrt")) {
+//         return `The square root is ${Math.sqrt(Number(number))}`;
+//       } else if (expression.includes("Math.cbrt")) {
+//         return `The cube root is ${Math.cbrt(Number(number))}`;
+//       }
+//     }
+
+//     // Basic evaluation
+//     if (/^[\d+\-*/().\s^]+$/.test(expression)) {
+//       const result = eval(expression);
+//       return `The answer is ${result}`;
+//     } else {
+//       return "Sorry, I can only perform basic and intermediate calculations.";
+//     }
+//   } catch (error) {
+//     return "There was an error in your calculation. Please try again.";
+//   }
+// };
+
+    // Combined Advanced Calculator (with Matrix and Complex Numbers functions)
+
+/*
+function advancedCalculator(input) {
+  let result = "";
+
+  try {
+    // Matrix Operations
+    if (input.includes("matrix add")) {
+      result = matrixAddition(input);
+    } else if (input.includes("matrix multiply")) {
+      result = matrixMultiplication(input);
+    } else if (input.includes("matrix determinant")) {
+      result = matrixDeterminant(input);
+    } else if (input.includes("matrix transpose")) {
+      result = matrixTranspose(input);
+    }
+    // Complex Numbers Operations
+    else if (input.includes("complex add")) {
+      result = complexAdd(input);
+    } else if (input.includes("complex multiply")) {
+      result = complexMultiply(input);
+    } else if (input.includes("complex modulus")) {
+      result = complexModulus(input);
+    } else if (input.includes("complex conjugate")) {
+      result = complexConjugate(input);
+    }
+    // Handle other operations (basic calculations)
+    else {
+      result = eval(input);
     }
 
-    // Basic evaluation
-    if (/^[\d+\-*/().\s^]+$/.test(expression)) {
-      const result = eval(expression);
-      return `The answer is ${result}`;
-    } else {
-      return "Sorry, I can only perform basic and intermediate calculations.";
+    // Format the result for cleaner output
+    if (typeof result === "number" && result % 1 === 0) {
+      result = result.toFixed(0);
+    }
+
+  } catch (error) {
+    result = "Sorry, I couldn't understand that. Please check the syntax.";
+  }
+
+  return result;
+}
+*/
+    
+
+// ==========================
+// Matrix Operations Functions
+// ==========================
+
+// Matrix Addition
+/* function matrixAddition(input) {
+  const matrices = input.split("matrix add");
+  const matrix1 = JSON.parse(matrices[1].trim().split("and")[0].trim());
+  const matrix2 = JSON.parse(matrices[1].trim().split("and")[1].trim());
+
+  if (matrix1.length !== matrix2.length || matrix1[0].length !== matrix2[0].length) {
+    return "Matrices must have the same dimensions!";
+  }
+
+  const result = matrix1.map((row, i) =>
+    row.map((val, j) => val + matrix2[i][j])
+  );
+
+  return JSON.stringify(result);
+}
+
+// Matrix Multiplication
+function matrixMultiplication(input) {
+  const matrices = input.split("matrix multiply");
+  const matrix1 = JSON.parse(matrices[1].trim().split("and")[0].trim());
+  const matrix2 = JSON.parse(matrices[1].trim().split("and")[1].trim());
+
+  if (matrix1[0].length !== matrix2.length) {
+    return "Matrix multiplication not possible! Columns of matrix 1 must equal rows of matrix 2.";
+  }
+
+  const result = matrix1.map((row) =>
+    matrix2[0].map((_, j) =>
+      row.reduce((sum, el, k) => sum + el * matrix2[k][j], 0)
+    )
+  );
+
+  return JSON.stringify(result);
+}
+
+// Matrix Determinant
+function matrixDeterminant(input) {
+  const matrix = JSON.parse(input.split("matrix determinant")[1].trim());
+
+  if (matrix.length !== matrix[0].length) {
+    return "Matrix must be square (equal number of rows and columns).";
+  }
+
+  const determinant = (matrix) => {
+    if (matrix.length === 2) {
+      return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
+    }
+    return matrix[0].reduce((det, val, colIndex) =>
+      det + val * Math.pow(-1, colIndex) * determinant(minor(matrix, colIndex)), 0);
+  };
+
+  const minor = (matrix, col) =>
+    matrix.slice(1).map(row => row.filter((_, index) => index !== col));
+
+  return determinant(matrix);
+}
+
+// Matrix Transpose
+function matrixTranspose(input) {
+  const matrix = JSON.parse(input.split("matrix transpose")[1].trim());
+  const result = matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+  return JSON.stringify(result);
+}
+
+// ============================
+// Complex Numbers Operations
+// ============================
+
+// Complex Addition
+function complexAdd(input) {
+  const nums = input.split("complex add");
+  const num1 = nums[1].trim().split("and")[0].trim();
+  const num2 = nums[1].trim().split("and")[1].trim();
+
+  const complex1 = parseComplex(num1);
+  const complex2 = parseComplex(num2);
+
+  const real = complex1.real + complex2.real;
+  const imaginary = complex1.imaginary + complex2.imaginary;
+
+  return `${real} + ${imaginary}i`;
+}
+
+// Complex Multiplication */
+
+/*
+function complexMultiply(input) {
+  const nums = input.split("complex multiply");
+  const num1 = nums[1].trim().split("and")[0].trim();
+  const num2 = nums[1].trim().split("and")[1].trim();
+
+  const complex1 = parseComplex(num1);
+  const complex2 = parseComplex(num2);
+
+  const real = complex1.real * complex2.real - complex1.imaginary * complex2.imaginary;
+  const imaginary = complex1.real * complex2.imaginary + complex1.imaginary * complex2.real;
+
+  return `${real} + ${imaginary}i`;
+}
+
+// Complex Modulus
+function complexModulus(input) {
+  const num = input.split("complex modulus")[1].trim();
+  const complex = parseComplex(num);
+
+  const modulus = Math.sqrt(Math.pow(complex.real, 2) + Math.pow(complex.imaginary, 2));
+  return modulus;
+}
+
+// Complex Conjugate
+function complexConjugate(input) {
+  const num = input.split("complex conjugate")[1].trim();
+  const complex = parseComplex(num);
+
+  return `${complex.real} - ${complex.imaginary}i`;
+}
+
+// Helper function to parse a complex number
+function parseComplex(complexStr) {
+  const [real, imaginary] = complexStr.split(" + ").map(part => part.replace("i", "").trim());
+  return { real: parseFloat(real), imaginary: parseFloat(imaginary || 0) };
+}
+
+// ============================
+// Function to run Calculator
+// ============================
+
+function runAdvancedCalculator() {
+  const input = prompt("Enter your calculation command:");
+
+  const output = advancedCalculator(input);
+  alert("Result: " + output);
+}
+
+// Start the Calculator
+runAdvancedCalculator();
+*/
+
+    
+
+// Function to enable calculator mode
+function enableCalculatorMode() {
+  isCalculatorMode = true;
+  return "Calculator mode activated. Please enter your calculation command.";
+}
+
+// Function to exit calculator mode
+function exitCalculatorMode() {
+  isCalculatorMode = false;
+  return "Exiting calculator mode. Returning to main system.";
+}
+
+// Function to handle advanced calculator functionality
+function advancedCalculator(input) {
+  let result = "";
+
+  try {
+    // Basic Operations
+    if (input.includes("add") || input.includes("subtract") || input.includes("multiply") || input.includes("divide")) {
+      result = basicOperations(input);
+    } 
+    // Advanced Operations (e.g., Matrix, Complex Numbers)
+    else if (input.includes("matrix") || input.includes("complex")) {
+      result = handleAdvancedOperations(input);
+    }
+    else {
+      result = "Invalid command in calculator mode.";
+    }
+
+    // Format result
+    if (result % 1 === 0) {
+      result = result.toFixed(0);
     }
   } catch (error) {
-    return "There was an error in your calculation. Please try again.";
+    result = "Sorry, I couldn't understand that. Please check the syntax.";
   }
-};
 
+  return result;
+}
 
+// **Basic Calculator Operations (add, subtract, etc.)**
+function basicOperations(input) {
+  const operation = input.toLowerCase();
+  let result = 0;
 
+  if (operation.includes("add")) {
+    const nums = input.split("add");
+    result = parseFloat(nums[0]) + parseFloat(nums[1]);
+  } else if (operation.includes("subtract")) {
+    const nums = input.split("subtract");
+    result = parseFloat(nums[0]) - parseFloat(nums[1]);
+  } else if (operation.includes("multiply")) {
+    const nums = input.split("multiply");
+    result = parseFloat(nums[0]) * parseFloat(nums[1]);
+  } else if (operation.includes("divide")) {
+    const nums = input.split("divide");
+    result = parseFloat(nums[0]) / parseFloat(nums[1]);
+  }
+
+  return result;
+}
+
+// **Advanced Operations (Matrix, Complex Numbers)**
+function handleAdvancedOperations(input) {
+  let result = "";
+
+  // Example: Handle matrix operations or complex numbers (simplified)
+  if (input.includes("matrix")) {
+    // Example: matrix add, multiply, transpose, determinant, etc.
+    result = "Matrix operation not implemented yet.";
+  } else if (input.includes("complex")) {
+    // Example: complex number addition, modulus, etc.
+    result = "Complex number operation not implemented yet.";
+  }
+
+  return result;
+}
+
+// **Voice Output Function**
+function speakOutput(output) {
+  const speech = new SpeechSynthesisUtterance(output);
+  window.speechSynthesis.speak(speech);
+}
+
+// **Text Output Function**
+function showTextOutput(output) {
+  alert("Result: " + output);  // Text-based output
+}
+
+// **Start Calculator in Voice Mode or Text Mode**
+function startCalculator() {
+  const modeInput = prompt("Would you like to use Voice Mode? (Yes/No)").toLowerCase();
+
+  if (modeInput === 'yes') {
+    isVoiceMode = true;
+    alert("Voice mode activated. Please speak your command.");
+    // Call a speech recognition function here to listen for user input
+    startVoiceRecognition(); // Placeholder for voice recognition function
+  } else {
+    isVoiceMode = false;
+    alert("Text mode activated. Please type your command.");
+    startTextInput(); // Proceed with text-based input
+  }
+}
+
+// **Voice Recognition (Example Placeholder)**
+function startVoiceRecognition() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = "en-US";
+  recognition.onresult = function(event) {
+    const voiceInput = event.results[0][0].transcript;
+    processInput(voiceInput);  // Pass the voice input to the main processing function
+  };
+  recognition.start();
+}
+
+// **Start the calculator interface**
+startCalculator();
+    
 // Command logic
 function takeCommand(message) {
   if (message.includes("hello") ||
@@ -289,25 +600,11 @@ function takeCommand(message) {
   } else if (message.includes("light mode")) {
     document.body.classList.remove("dark-mode");
     typeMessage("Light mode activated.");
-  } else if (message.includes("motivate me") ||
-         message.includes("inspire me") ||
-         message.includes("give me motivation") ||
-         message.includes("i need inspiration")) {
-    const motivation = randomMotivation();
-    typeMessage(motivation);
-  } else if (message.includes("calculate") ||
-         message.includes("what is") ||
-         message.includes("solve") ||
-         message.includes("square root") ||
-         message.includes("cube root") ||
-         message.includes("power of") ||
-         message.includes("percent")) {
-  const expression = message
-    .replace(/(calculate|what is|solve|square root|cube root|power of|percent)/gi, "")
-    .trim();
-  if (expression) {
-    const calcResult = advancedCalculator(expression);
-    typeMessage(calcResult);
+  } else if (message.includes("calculator mode") || message.includes("exit calculator mode") || isCalculatorMode) {
+    const response = processInput(message);
+    typeMessage(response);
+}
+
    } else {
      typeMessage("Please provide a calculation for me to solve.");
    }
